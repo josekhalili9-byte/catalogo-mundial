@@ -1,0 +1,22 @@
+{
+  "entities": {
+    "Jersey": {
+      "title": "Jersey",
+      "description": "A football jersey in the catalog",
+      "type": "object",
+      "properties": {
+        "team": { "type": "string" },
+        "type": { "type": "string", "enum": ["Local", "Visitante", "Alternativa"] },
+        "price": { "type": "number", "description": "Price in MXN" },
+        "imageUrl": { "type": "string", "format": "uri" }
+      },
+      "required": ["team", "type", "price", "imageUrl"]
+    }
+  },
+  "firestore": {
+    "/jerseys/{jerseyId}": {
+      "schema": { "$ref": "#/entities/Jersey" },
+      "description": "Collection of all jerseys available in the catalog"
+    }
+  }
+}
