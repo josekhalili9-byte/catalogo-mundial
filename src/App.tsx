@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { db, auth, logout } from './firebase';
+import { db } from './firebase';
 import Navbar from './components/Navbar';
 import Catalog from './components/Catalog';
 import AdminPanel from './components/AdminPanel';
@@ -15,7 +14,9 @@ export default function App() {
     const saved = localStorage.getItem('orders');
     return saved ? JSON.parse(saved) : [];
   });
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(() => {
+    return sessionStorage.getItem('isAdmin') === 'true';
+  });
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [filterTeam, setFilterTeam] = useState<string>('Todos');
   const [customizingJersey, setCustomizingJersey] = useState<Jersey | null>(null);
@@ -26,14 +27,6 @@ export default function App() {
   }, [orders]);
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      if (user && user.email === 'josekhalili9@gmail.com') {
-        setIsAdmin(true);
-      } else {
-        setIsAdmin(false);
-      }
-    });
-
     const unsubscribeDb = onSnapshot(collection(db, 'jerseys'), (snapshot) => {
       const jerseysData = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -47,7 +40,6 @@ export default function App() {
     });
 
     return () => {
-      unsubscribeAuth();
       unsubscribeDb();
     };
   }, []);
@@ -94,8 +86,14 @@ export default function App() {
     setOrders(orders.filter(o => o.id !== id));
   };
 
-  const handleLogout = async () => {
-    await logout();
+  const handleLogin = () => {
+    sessionStorage.setItem('isAdmin', 'true');
+    setIsAdmin(true);
+    setShowAdminLogin(false);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('isAdmin');
     setIsAdmin(false);
   };
 
@@ -137,10 +135,7 @@ export default function App() {
       {showAdminLogin && (
         <AdminLoginModal 
           onClose={() => setShowAdminLogin(false)} 
-          onLogin={() => {
-            setIsAdmin(true);
-            setShowAdminLogin(false);
-          }} 
+          onLogin={handleLogin} 
         />
       )}
 
