@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Jersey, Order } from '../types';
-import { X, ShoppingCart, Info } from 'lucide-react';
+import { X, ShoppingCart, Info, Banknote } from 'lucide-react';
 
 interface CustomizeModalProps {
   jersey: Jersey;
@@ -138,6 +138,13 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
               <Info className="h-5 w-5 text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
               <p className="text-sm text-blue-800 font-medium">
                 Tu pedido tarda de 2 a 3 semanas en llegar.
+              </p>
+            </div>
+
+            <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-4 mt-3 flex items-start">
+              <Banknote className="h-5 w-5 text-emerald-500 mt-0.5 mr-3 flex-shrink-0" />
+              <p className="text-sm text-emerald-800 font-medium">
+                Los pagos son únicamente en efectivo al momento de la entrega.
               </p>
             </div>
           </div>

@@ -23,6 +23,9 @@ export default function JerseyCard({ jersey, onCustomize }: JerseyCardProps) {
       </div>
       <div className="p-5 flex flex-col flex-grow">
         <h3 className="text-lg font-bold text-gray-900 mb-1">{jersey.team}</h3>
+        {jersey.description && (
+          <p className="text-sm text-gray-500 mb-3 line-clamp-2">{jersey.description}</p>
+        )}
         <div className="flex justify-between items-center text-gray-600 mb-4">
           <span className="font-medium text-sm text-gray-500">
             Jersey Oficial

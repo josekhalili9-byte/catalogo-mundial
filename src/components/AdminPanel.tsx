@@ -20,7 +20,8 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
     team: TEAMS[0],
     type: 'Local',
     price: 1200,
-    imageUrl: ''
+    imageUrl: '',
+    description: ''
   });
   
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -34,7 +35,8 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
       team: TEAMS[0],
       type: 'Local',
       price: 1200,
-      imageUrl: ''
+      imageUrl: '',
+      description: ''
     });
     setEditingId(null);
     setErrorMsg(null);
@@ -226,6 +228,17 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                         />
                       </div>
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Descripción (Opcional)</label>
+                    <textarea
+                      value={formData.description || ''}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black focus:border-transparent transition-all resize-none"
+                      placeholder="Ej. ¿No sabes qué playera elegir? Déjalo a la suerte..."
+                      rows={3}
+                    />
                   </div>
                 </div>
 

@@ -1,9 +1,10 @@
 export interface Jersey {
   id: string;
   team: string;
-  type: 'Local' | 'Visitante' | 'Alternativa';
+  type: string;
   price: number;
   imageUrl: string;
+  description?: string;
 }
 
 export interface Order {
