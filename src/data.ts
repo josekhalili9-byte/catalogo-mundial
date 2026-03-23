@@ -1,9 +1,9 @@
 export const TEAMS = [
   "México", "Estados Unidos", "Canadá", "Haití (Próximamente)", "Curazao (Próximamente)",
-  "Argentina", "Brasil", "Colombia", "Paraguay", "Ecuador (Próximamente)",
-  "Inglaterra", "Francia", "España", "Portugal", "Croacia (Próximamente)", "Noruega",
-  "Marruecos", "Egipto", "Argelia", "Ghana", "Senegal", "Costa de Marfil", "Sudáfrica", "Cabo Verde",
-  "Japón", "Corea del Sur", "Arabia Saudita", "Australia", "Qatar"
+  "Argentina", "Brasil", "Colombia", "Ecuador (Próximamente)",
+  "Inglaterra", "Francia", "España", "Portugal", "Croacia (Próximamente)",
+  "Marruecos", "Egipto", "Argelia", "Ghana", "Costa de Marfil", "Cabo Verde",
+  "Japón", "Corea del Sur", "Arabia Saudita", "Australia"
 ].sort();
 
 export const JERSEY_TYPES = ['Local', 'Visitante', 'Alternativa'];
