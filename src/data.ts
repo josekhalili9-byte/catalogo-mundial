@@ -22,12 +22,16 @@ export const TEAMS_BY_CATEGORY: Record<string, string[]> = {
     "AS Mónaco (Próximamente)", "Olympique de Lyon (Próximamente)", "Olympique de Marsella (Próximamente)", "PSG (Próximamente)"
   ],
   "Ediciones Especiales": [
-    "Retro", "Concept Kit", "Edición Conmemorativa", "Colaboración Especial", "Versión Jugador"
+    "Retro", "Concept Kit", "Edición Conmemorativa", "Colaboración Especial", "Versión Jugador", "Firmadas"
   ],
   "Otros": [
     "Mystery Box"
   ]
 };
+
+export const CLUB_CATEGORIES = [
+  "Premier League", "La Liga", "Serie A", "Bundesliga", "Ligue 1"
+];
 
 export const TEAMS = Object.values(TEAMS_BY_CATEGORY).flat().sort();
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Jersey } from '../types';
 import JerseyCard from './JerseyCard';
 import { Shirt, Sparkles, Package } from 'lucide-react';
-import { TEAMS_BY_CATEGORY } from '../data';
+import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES } from '../data';
 
 const mysteryBoxJersey: Jersey = {
   id: 'mystery-box',
@@ -16,17 +16,22 @@ const mysteryBoxJersey: Jersey = {
 interface CatalogProps {
   jerseys: Jersey[];
   filterTeam: string;
+  setFilterTeam: (team: string) => void;
   onCustomize: (jersey: Jersey) => void;
 }
 
-export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogProps) {
+export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomize }: CatalogProps) {
   const isCategory = Object.keys(TEAMS_BY_CATEGORY).includes(filterTeam);
+  const isClubes = filterTeam === 'Clubes';
   
-  const filteredJerseys = filterTeam === 'Todos' 
+  const filteredJerseys = (filterTeam === 'Todos' 
     ? jerseys 
-    : isCategory
-      ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
-      : jerseys.filter(j => j.team === filterTeam);
+    : isClubes
+      ? jerseys.filter(j => CLUB_CATEGORIES.some(cat => TEAMS_BY_CATEGORY[cat].includes(j.team)))
+      : isCategory
+        ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
+        : jerseys.filter(j => j.team === filterTeam)
+  ).sort((a, b) => a.team.localeCompare(b.team));
 
   return (
     <div className="py-8">
@@ -34,12 +39,32 @@ export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogPro
         <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl mb-4">
           Colección Exclusiva
         </h1>
-        <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
           Descubre nuestra selección de playeras oficiales de las mejores selecciones y clubes del mundo.
         </p>
+
+        <div className="flex flex-wrap justify-center gap-3">
+          {[
+            { id: 'Selecciones', label: 'Selecciones' },
+            { id: 'Clubes', label: 'Clubes (Próximamente)' },
+            { id: 'Ediciones Especiales', label: 'Ediciones Especiales (Próximamente)' }
+          ].map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setFilterTeam(category.id)}
+              className={`px-6 py-2 rounded-full font-medium transition-all duration-200 ${
+                filterTeam === category.id || (category.id === 'Clubes' && CLUB_CATEGORIES.includes(filterTeam))
+                  ? 'bg-black text-white shadow-md transform scale-105'
+                  : 'bg-white text-gray-600 border border-gray-200 hover:border-black hover:text-black'
+              }`}
+            >
+              {category.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {filterTeam === 'Todos' && (
+      {filterTeam === 'Ediciones Especiales' && (
         <div className="mb-12 relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-purple-900 to-black text-white shadow-2xl">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-overlay"></div>
           <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">

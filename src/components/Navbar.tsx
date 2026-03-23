@@ -1,5 +1,5 @@
 import React from 'react';
-import { TEAMS_BY_CATEGORY } from '../data';
+import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES } from '../data';
 import { Lock, LogOut, Shirt } from 'lucide-react';
 
 interface NavbarProps {
@@ -29,15 +29,20 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
                   onChange={(e) => setFilterTeam(e.target.value)}
                   className="appearance-none bg-gray-100 border-none text-gray-700 py-2 pl-4 pr-8 rounded-full focus:outline-none focus:ring-2 focus:ring-black font-medium"
                 >
-                  <option value="Todos">Todas las Playeras</option>
-                  {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => (
-                    <optgroup key={category} label={category}>
-                      <option value={category}>Ver todo {category}</option>
-                      {teams.map(team => (
-                        <option key={team} value={team}>{team}</option>
-                      ))}
-                    </optgroup>
-                  ))}
+                  <option value="Selecciones">Todas las Selecciones</option>
+                  <option value="Clubes">Todos los Clubes (Próximamente)</option>
+                  {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => {
+                    const isClub = CLUB_CATEGORIES.includes(category);
+                    const isEspecial = category === 'Ediciones Especiales';
+                    return (
+                      <optgroup key={category} label={isClub ? `Clubes - ${category}` : (isEspecial ? `${category} (Próximamente)` : category)}>
+                        <option value={category}>Ver todo {category} {isClub || isEspecial ? '(Próximamente)' : ''}</option>
+                        {teams.map(team => (
+                          <option key={team} value={team}>{team}</option>
+                        ))}
+                      </optgroup>
+                    );
+                  })}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                   <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>

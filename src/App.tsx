@@ -15,7 +15,7 @@ export default function App() {
     return sessionStorage.getItem('isAdmin') === 'true';
   });
   const [showAdminLogin, setShowAdminLogin] = useState(false);
-  const [filterTeam, setFilterTeam] = useState<string>('Todos');
+  const [filterTeam, setFilterTeam] = useState<string>('Selecciones');
   const [customizingJersey, setCustomizingJersey] = useState<Jersey | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -155,6 +155,7 @@ export default function App() {
           <Catalog 
             jerseys={jerseys} 
             filterTeam={filterTeam} 
+            setFilterTeam={setFilterTeam}
             onCustomize={(jersey) => setCustomizingJersey(jersey)}
           />
         )}

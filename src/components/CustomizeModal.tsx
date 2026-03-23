@@ -16,6 +16,8 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
   const [size, setSize] = useState('');
   const [dorsal, setDorsal] = useState('');
   const [playerName, setPlayerName] = useState('');
+  const [isSigned, setIsSigned] = useState(false);
+  const [signedPlayer, setSignedPlayer] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleBuy = () => {
@@ -49,6 +51,8 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
       size,
       number: dorsal,
       playerName,
+      isSigned,
+      signedPlayer: isSigned ? signedPlayer.trim() : undefined,
       status: 'Pendiente',
       createdAt: Date.now()
     };
@@ -244,6 +248,36 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
                   maxLength={15}
                 />
               </div>
+            </div>
+
+            <div className="pt-2">
+              <label className="flex items-center space-x-3 cursor-pointer p-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={isSigned}
+                  onChange={(e) => setIsSigned(e.target.checked)}
+                  className="w-5 h-5 text-black rounded focus:ring-black border-gray-300"
+                />
+                <span className="text-sm font-bold text-gray-800">
+                  Solicitar versión firmada
+                </span>
+              </label>
+
+              {isSigned && (
+                <div className="mt-3 pl-2 border-l-2 border-black animate-in fade-in slide-in-from-top-2">
+                  <label className="block text-sm font-bold text-gray-700 mb-1">
+                    ¿Firma de qué jugador?
+                  </label>
+                  <input
+                    type="text"
+                    value={signedPlayer}
+                    onChange={(e) => setSignedPlayer(e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black focus:border-transparent transition-all"
+                    placeholder="Ej. Cristiano Ronaldo"
+                    required={isSigned}
+                  />
+                </div>
+              )}
             </div>
             
             <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mt-4 flex items-start">

@@ -20,6 +20,8 @@ export interface Order {
   size: string;
   number: string;
   playerName: string;
+  isSigned?: boolean;
+  signedPlayer?: string;
   status: 'Pendiente' | 'Entregado';
   createdAt: number;
 }
