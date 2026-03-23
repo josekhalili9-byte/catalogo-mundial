@@ -399,6 +399,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                       <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-bold text-gray-900">{order.customerName}</div>
+                          <div className="text-xs text-gray-600 mt-1 font-medium">📞 {order.phone}</div>
                           {order.department && <div className="text-xs text-gray-500 mt-1">Lugar: {order.department}</div>}
                           <div className="text-xs text-gray-400 mt-1">
                             {new Date(order.createdAt).toLocaleDateString()}
