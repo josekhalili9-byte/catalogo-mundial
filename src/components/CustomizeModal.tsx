@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Jersey, Order } from '../types';
-import { X, ShoppingCart, Info, Banknote } from 'lucide-react';
+import { X, ShoppingCart, Info, Banknote, Check } from 'lucide-react';
 
 interface CustomizeModalProps {
   jersey: Jersey;
@@ -11,12 +11,23 @@ interface CustomizeModalProps {
 export default function CustomizeModal({ jersey, onClose, onAddOrder }: CustomizeModalProps) {
   const [customerName, setCustomerName] = useState('');
   const [department, setDepartment] = useState('');
+  const [gender, setGender] = useState<'Hombre' | 'Mujer' | 'Niño' | ''>('');
+  const [size, setSize] = useState('');
   const [dorsal, setDorsal] = useState('');
   const [playerName, setPlayerName] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleBuy = () => {
-    if (!customerName.trim() || !department.trim()) {
-      alert('Por favor, ingresa tu nombre completo y departamento.');
+    if (!customerName.trim()) {
+      alert('Por favor, ingresa tu nombre completo.');
+      return;
+    }
+    if (!gender) {
+      alert('Por favor, selecciona si la playera es para hombre o mujer.');
+      return;
+    }
+    if (!size) {
+      alert('Por favor, selecciona una talla.');
       return;
     }
 
@@ -27,7 +38,9 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
       type: jersey.type,
       price: jersey.price,
       customerName,
-      department,
+      department: department.trim(),
+      gender: gender as 'Hombre' | 'Mujer' | 'Niño',
+      size,
       number: dorsal,
       playerName,
       status: 'Pendiente',
@@ -35,8 +48,25 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
     };
 
     onAddOrder(newOrder);
-    onClose();
+    setShowSuccess(true);
+    setTimeout(() => {
+      onClose();
+    }, 2500);
   };
+
+  if (showSuccess) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center flex flex-col items-center animate-in fade-in zoom-in duration-300">
+          <div className="w-20 h-20 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mb-4">
+            <Check className="w-10 h-10" />
+          </div>
+          <h3 className="text-2xl font-bold text-emerald-600 mb-2">¡Pedido realizado con éxito!</h3>
+          <p className="text-gray-500">Tu pedido ha sido registrado correctamente.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
@@ -91,16 +121,71 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
 
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-1">
-                Departamento *
+                Departamento, clase o dirección
               </label>
               <input
                 type="text"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-                placeholder="Ej. Ventas, IT, Marketing"
-                required
+                placeholder="Ej. Ventas, 3ro A, Calle 123"
               />
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Corte de la playera *
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {['Hombre', 'Mujer', 'Niño'].map((g) => (
+                  <button
+                    key={g}
+                    type="button"
+                    onClick={() => setGender(g as 'Hombre' | 'Mujer' | 'Niño')}
+                    className={`py-2.5 text-sm font-bold rounded-xl border transition-all ${gender === g ? 'bg-black text-white border-black' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'}`}
+                  >
+                    {g}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                Talla *
+              </label>
+              <div className="space-y-3">
+                <div>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Niño</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['Niño S', 'Niño M', 'Niño L', 'Niño XL'].map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setSize(t)}
+                        className={`py-2 text-sm font-bold rounded-lg border transition-all ${size === t ? 'bg-black text-white border-black' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'}`}
+                      >
+                        {t.replace('Niño ', '')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Adulto</p>
+                  <div className="grid grid-cols-4 gap-2">
+                    {['Adulto S', 'Adulto M', 'Adulto L', 'Adulto XL'].map((t) => (
+                      <button
+                        key={t}
+                        type="button"
+                        onClick={() => setSize(t)}
+                        className={`py-2 text-sm font-bold rounded-lg border transition-all ${size === t ? 'bg-black text-white border-black' : 'bg-white text-gray-700 border-gray-200 hover:border-gray-300'}`}
+                      >
+                        {t.replace('Adulto ', '')}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-2">

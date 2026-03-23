@@ -388,7 +388,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                   <thead className="bg-gray-50">
                     <tr>
                       <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Cliente</th>
-                      <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Playera</th>
+                      <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Playera y Talla</th>
                       <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Personalización</th>
                       <th scope="col" className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Estado</th>
                       <th scope="col" className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">Acciones</th>
@@ -399,7 +399,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                       <tr key={order.id} className="hover:bg-gray-50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-bold text-gray-900">{order.customerName}</div>
-                          <div className="text-xs text-gray-500 mt-1">Depto: {order.department}</div>
+                          {order.department && <div className="text-xs text-gray-500 mt-1">Lugar: {order.department}</div>}
                           <div className="text-xs text-gray-400 mt-1">
                             {new Date(order.createdAt).toLocaleDateString()}
                           </div>
@@ -407,6 +407,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-bold text-gray-900">{order.team}</div>
                           <div className="text-xs text-gray-500 uppercase tracking-wider mt-1">{order.type}</div>
+                          <div className="text-xs font-bold text-indigo-600 mt-1">Talla: {order.size} ({order.gender})</div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">

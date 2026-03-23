@@ -20,7 +20,9 @@ service cloud.firestore {
     //   - type: string
     //   - price: number
     //   - customerName: string
-    //   - department: string
+    //   - department: string (optional)
+    //   - gender: string ('Hombre' | 'Mujer' | 'Niño')
+    //   - size: string
     //   - number: string
     //   - playerName: string
     //   - status: string ('Pendiente' | 'Entregado')
@@ -40,13 +42,15 @@ service cloud.firestore {
     }
 
     function isValidOrder(data) {
-      return data.keys().hasAll(['jerseyId', 'team', 'type', 'price', 'customerName', 'department', 'status', 'createdAt']) &&
+      return data.keys().hasAll(['jerseyId', 'team', 'type', 'price', 'customerName', 'gender', 'size', 'status', 'createdAt']) &&
              data.jerseyId is string && data.jerseyId.size() < 100 &&
              data.team is string && data.team.size() < 100 &&
              data.type is string && data.type.size() < 50 &&
              data.price is number && data.price >= 0 &&
              data.customerName is string && data.customerName.size() > 0 && data.customerName.size() < 100 &&
-             data.department is string && data.department.size() > 0 && data.department.size() < 100 &&
+             (!('department' in data) || (data.department is string && data.department.size() <= 100)) &&
+             data.gender is string && data.gender in ['Hombre', 'Mujer', 'Niño'] &&
+             data.size is string && data.size in ['Niño S', 'Niño M', 'Niño L', 'Niño XL', 'Adulto S', 'Adulto M', 'Adulto L', 'Adulto XL'] &&
              (!('number' in data) || (data.number is string && data.number.size() <= 10)) &&
              (!('playerName' in data) || (data.playerName is string && data.playerName.size() <= 100)) &&
              data.status in ['Pendiente', 'Entregado'] &&

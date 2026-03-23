@@ -14,7 +14,9 @@ export interface Order {
   type: string;
   price: number;
   customerName: string;
-  department: string;
+  department?: string;
+  gender: 'Hombre' | 'Mujer' | 'Niño';
+  size: string;
   number: string;
   playerName: string;
   status: 'Pendiente' | 'Entregado';
