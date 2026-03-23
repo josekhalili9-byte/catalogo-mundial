@@ -1,7 +1,16 @@
 import React from 'react';
 import { Jersey } from '../types';
 import JerseyCard from './JerseyCard';
-import { Shirt } from 'lucide-react';
+import { Shirt, Sparkles, Package } from 'lucide-react';
+
+const mysteryBoxJersey: Jersey = {
+  id: 'mystery-box',
+  team: 'Mystery Box',
+  type: 'Edición Sorpresa',
+  price: 3000,
+  imageUrl: 'https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800&auto=format&fit=crop',
+  description: '¡Déjate sorprender! Recibe 2 playeras del mundial y 1 playera retro (de mundial o de clubes).'
+};
 
 interface CatalogProps {
   jerseys: Jersey[];
@@ -24,6 +33,52 @@ export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogPro
           Descubre nuestra selección de playeras oficiales de las mejores selecciones del mundo.
         </p>
       </div>
+
+      {filterTeam === 'Todos' && (
+        <div className="mb-12 relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-900 via-purple-900 to-black text-white shadow-2xl">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2000&auto=format&fit=crop')] opacity-20 bg-cover bg-center mix-blend-overlay"></div>
+          <div className="relative p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex-1 text-center md:text-left">
+              <div className="inline-flex items-center space-x-2 bg-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-sm font-bold tracking-wider uppercase mb-4">
+                <Sparkles className="w-4 h-4 text-yellow-400" />
+                <span className="text-yellow-400">Edición Especial</span>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500">
+                Mystery Box
+              </h2>
+              <p className="text-lg text-gray-300 mb-6 max-w-xl mx-auto md:mx-0">
+                ¿Te gustan las sorpresas? Pide nuestra Mystery Box y recibe <strong>2 playeras del mundial y 1 playera retro</strong> (de mundial o de clubes). ¡Atrévete a descubrir qué joyas te tocarán!
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+                <div className="text-3xl font-mono font-bold text-white">
+                  $3000 <span className="text-sm text-gray-400 font-sans">MXN</span>
+                </div>
+                <button 
+                  onClick={() => onCustomize(mysteryBoxJersey)}
+                  className="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-black font-bold rounded-xl shadow-lg transform transition hover:scale-105 flex items-center justify-center"
+                >
+                  <Package className="w-5 h-5 mr-2" />
+                  Pedir Mystery Box
+                </button>
+              </div>
+            </div>
+            <div className="w-full md:w-1/3 flex justify-center">
+              <div className="relative w-48 h-48 md:w-64 md:h-64">
+                <div className="absolute inset-0 bg-yellow-500 blur-3xl opacity-20 rounded-full animate-pulse"></div>
+                <img 
+                  src="https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800&auto=format&fit=crop" 
+                  alt="Mystery Box" 
+                  className="relative z-10 w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-yellow-500/30"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 flex items-center justify-center z-20">
+                  <span className="text-7xl font-black text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">?</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {filteredJerseys.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-gray-400">

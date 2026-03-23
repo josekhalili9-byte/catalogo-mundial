@@ -75,9 +75,23 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row my-8">
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 overflow-y-auto"
+      onClick={onClose}
+    >
+      <div 
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row my-8 relative"
+        onClick={(e) => e.stopPropagation()}
+      >
         
+        {/* Botón de cerrar general */}
+        <button 
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 bg-white/90 backdrop-blur-sm text-gray-800 hover:bg-white hover:text-black transition-all rounded-full p-2 shadow-md"
+        >
+          <X className="h-6 w-6" />
+        </button>
+
         {/* Left side: Image */}
         <div className="w-full md:w-1/2 bg-gray-100 relative">
           <img 
@@ -93,15 +107,8 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
 
         {/* Right side: Form */}
         <div className="w-full md:w-1/2 p-6 md:p-8 relative flex flex-col">
-          <button 
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors bg-gray-100 rounded-full p-2"
-          >
-            <X className="h-5 w-5" />
-          </button>
-
-          <div className="mb-6 mt-2">
-            <h2 className="text-3xl font-extrabold text-gray-900 mb-1">{jersey.team}</h2>
+          <div className="mb-6 mt-2 md:mt-0">
+            <h2 className="text-3xl font-extrabold text-gray-900 mb-1 pr-8">{jersey.team}</h2>
             <p className="text-gray-500">Jersey Oficial - {jersey.type}</p>
             <div className="mt-2 text-2xl font-mono font-bold text-black">
               ${jersey.price} <span className="text-sm text-gray-500 font-sans">MXN</span>
