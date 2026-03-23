@@ -2,6 +2,7 @@ import React from 'react';
 import { Jersey } from '../types';
 import JerseyCard from './JerseyCard';
 import { Shirt, Sparkles, Package } from 'lucide-react';
+import { TEAMS_BY_CATEGORY } from '../data';
 
 const mysteryBoxJersey: Jersey = {
   id: 'mystery-box',
@@ -19,9 +20,13 @@ interface CatalogProps {
 }
 
 export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogProps) {
+  const isCategory = Object.keys(TEAMS_BY_CATEGORY).includes(filterTeam);
+  
   const filteredJerseys = filterTeam === 'Todos' 
     ? jerseys 
-    : jerseys.filter(j => j.team === filterTeam);
+    : isCategory
+      ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
+      : jerseys.filter(j => j.team === filterTeam);
 
   return (
     <div className="py-8">
@@ -30,7 +35,7 @@ export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogPro
           Colección Exclusiva
         </h1>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto">
-          Descubre nuestra selección de playeras oficiales de las mejores selecciones del mundo.
+          Descubre nuestra selección de playeras oficiales de las mejores selecciones y clubes del mundo.
         </p>
       </div>
 

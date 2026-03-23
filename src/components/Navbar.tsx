@@ -1,5 +1,5 @@
 import React from 'react';
-import { TEAMS } from '../data';
+import { TEAMS_BY_CATEGORY } from '../data';
 import { Lock, LogOut, Shirt } from 'lucide-react';
 
 interface NavbarProps {
@@ -29,9 +29,14 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
                   onChange={(e) => setFilterTeam(e.target.value)}
                   className="appearance-none bg-gray-100 border-none text-gray-700 py-2 pl-4 pr-8 rounded-full focus:outline-none focus:ring-2 focus:ring-black font-medium"
                 >
-                  <option value="Todos">Todas las Selecciones</option>
-                  {TEAMS.map(team => (
-                    <option key={team} value={team}>{team}</option>
+                  <option value="Todos">Todas las Playeras</option>
+                  {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => (
+                    <optgroup key={category} label={category}>
+                      <option value={category}>Ver todo {category}</option>
+                      {teams.map(team => (
+                        <option key={team} value={team}>{team}</option>
+                      ))}
+                    </optgroup>
                   ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
