@@ -249,8 +249,8 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-2xl hover:border-black transition-colors bg-gray-50">
                       <div className="space-y-1 text-center">
                         {formData.imageUrl ? (
-                          <div className="relative w-full aspect-[4/5] max-h-64 mx-auto mb-4 rounded-xl overflow-hidden shadow-sm">
-                            <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-cover" />
+                          <div className="relative w-full aspect-[4/5] max-h-64 mx-auto mb-4 rounded-xl overflow-hidden shadow-sm bg-gray-100 flex items-center justify-center">
+                            <img src={formData.imageUrl} alt="Preview" className="w-full h-full object-contain" />
                             <button
                               type="button"
                               onClick={() => setFormData({ ...formData, imageUrl: '' })}

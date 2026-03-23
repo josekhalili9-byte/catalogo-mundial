@@ -93,11 +93,11 @@ export default function CustomizeModal({ jersey, onClose, onAddOrder }: Customiz
         </button>
 
         {/* Left side: Image */}
-        <div className="w-full md:w-1/2 bg-gray-100 relative">
+        <div className="w-full md:w-1/2 bg-gray-100 relative flex items-center justify-center p-4 md:p-8">
           <img 
             src={jersey.imageUrl} 
             alt={`Playera ${jersey.team}`} 
-            className="w-full h-full object-cover aspect-[4/5] md:aspect-auto"
+            className="w-full h-full object-contain aspect-[4/5] md:aspect-auto max-h-[50vh] md:max-h-none"
             referrerPolicy="no-referrer"
           />
           <div className="absolute top-4 left-4 bg-black text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">

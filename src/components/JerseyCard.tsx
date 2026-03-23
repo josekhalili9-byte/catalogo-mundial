@@ -10,11 +10,11 @@ interface JerseyCardProps {
 export default function JerseyCard({ jersey, onCustomize }: JerseyCardProps) {
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group border border-gray-100 flex flex-col h-full">
-      <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+      <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden flex items-center justify-center p-4">
         <img
           src={jersey.imageUrl}
           alt={`Playera ${jersey.team}`}
-          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-contain object-center group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
         />
         <div className="absolute top-4 left-4 bg-black text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
