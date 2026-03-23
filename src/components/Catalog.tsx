@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Jersey, AppSettings } from '../types';
 import JerseyCard from './JerseyCard';
 import { Shirt, Sparkles, Package } from 'lucide-react';
@@ -25,24 +25,26 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
   const isCategory = Object.keys(TEAMS_BY_CATEGORY).includes(filterTeam);
   const isClubes = filterTeam === 'Clubes';
   
-  const filteredJerseys = (filterTeam === 'Todos' 
-    ? jerseys 
-    : isClubes
-      ? jerseys.filter(j => CLUB_CATEGORIES.some(cat => TEAMS_BY_CATEGORY[cat].includes(j.team)))
-      : isCategory
-        ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
-        : jerseys.filter(j => j.team === filterTeam)
-  ).sort((a, b) => {
-    const indexA = ORDERED_TEAMS.indexOf(a.team);
-    const indexB = ORDERED_TEAMS.indexOf(b.team);
-    
-    // Si no se encuentra en ORDERED_TEAMS, poner al final
-    if (indexA === -1 && indexB === -1) return a.team.localeCompare(b.team);
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    
-    return indexA - indexB;
-  });
+  const filteredJerseys = useMemo(() => {
+    const list = filterTeam === 'Todos' 
+      ? jerseys 
+      : isClubes
+        ? jerseys.filter(j => CLUB_CATEGORIES.some(cat => TEAMS_BY_CATEGORY[cat].includes(j.team)))
+        : isCategory
+          ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
+          : jerseys.filter(j => j.team === filterTeam);
+
+    return [...list].sort((a, b) => {
+      const indexA = ORDERED_TEAMS.indexOf(a.team);
+      const indexB = ORDERED_TEAMS.indexOf(b.team);
+      
+      if (indexA === -1 && indexB === -1) return a.team.localeCompare(b.team);
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      
+      return indexA - indexB;
+    });
+  }, [jerseys, filterTeam, isCategory, isClubes]);
 
   return (
     <div className="py-8">
@@ -108,12 +110,13 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
             </div>
             <div className="w-full md:w-1/3 flex justify-center">
               <div className="relative w-48 h-48 md:w-64 md:h-64">
-                <div className="absolute inset-0 bg-yellow-500 blur-3xl opacity-20 rounded-full animate-pulse"></div>
+                <div className="absolute inset-0 bg-yellow-500 blur-2xl opacity-20 rounded-full animate-pulse will-change-[opacity]"></div>
                 <img 
                   src="https://images.unsplash.com/photo-1607344645866-009c320b63e0?q=80&w=800&auto=format&fit=crop" 
                   alt="Mystery Box" 
                   className="relative z-10 w-full h-full object-cover rounded-2xl shadow-2xl border-4 border-yellow-500/30"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
                 <div className="absolute inset-0 flex items-center justify-center z-20">
                   <span className="text-7xl font-black text-white drop-shadow-[0_5px_5px_rgba(0,0,0,0.8)]">?</span>

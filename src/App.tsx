@@ -26,12 +26,12 @@ export default function App() {
   });
 
   useEffect(() => {
-    const unsubscribeSettings = onSnapshot(doc(db, 'settings', 'display'), (doc) => {
-      if (doc.exists()) {
-        setSettings(doc.data() as AppSettings);
+    const unsubscribeSettings = onSnapshot(doc(db, 'settings', 'display'), (snapshot) => {
+      if (snapshot.exists()) {
+        setSettings(snapshot.data() as AppSettings);
       } else {
         // Initialize settings if they don't exist
-        setDoc(doc.ref, {
+        setDoc(doc(db, 'settings', 'display'), {
           showSelecciones: true,
           showClubes: true,
           showEdicionesEspeciales: true

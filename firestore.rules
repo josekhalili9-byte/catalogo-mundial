@@ -30,6 +30,19 @@ service cloud.firestore {
     //   - createdAt: number
     // ===============================================================
 
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "josekhalili9@gmail.com" && request.auth.token.email_verified == true));
+    }
+
     function isValidUrl(url) {
       return url is string && (url.matches("^https://.*") || url.matches("^http://.*") || url.matches("^data:image/.*")) && url.size() < 1000000;
     }
@@ -62,22 +75,24 @@ service cloud.firestore {
     match /jerseys/{jerseyId} {
       // Public read for the catalog
       allow read: if true;
-      // Allow write since we are using a local password in the UI
-      allow create: if isValidJersey(request.resource.data);
-      allow update: if isValidJersey(request.resource.data);
-      allow delete: if true;
+      // Only admins can modify the catalog
+      allow write: if isAdmin();
     }
 
     match /orders/{orderId} {
-      allow read: if true;
+      // Admins can see all orders
+      allow read: if isAdmin();
+      // Anyone can create an order
       allow create: if isValidOrder(request.resource.data);
-      allow update: if isValidOrder(request.resource.data);
-      allow delete: if true;
+      // Only admins can update or delete orders
+      allow update, delete: if isAdmin();
     }
 
     match /settings/{document=**} {
+      // Public read for app configuration
       allow read: if true;
-      allow write: if true;
+      // Only admins can update settings
+      allow write: if isAdmin();
     }
   }
 }

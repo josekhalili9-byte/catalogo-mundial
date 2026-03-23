@@ -438,11 +438,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
                               <span className="text-gray-400 italic">Sin número</span>
                             )}
                           </div>
-                          {order.isSigned && (
-                            <div className="text-xs font-bold text-amber-600 mt-1 flex items-center">
-                              <span className="mr-1">✍️</span> Firmada: {order.signedPlayer}
-                            </div>
-                          )}
+                          {/* Removed signed version display */}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <button

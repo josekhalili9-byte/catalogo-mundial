@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES } from '../data';
 import { Lock, LogOut, Shirt } from 'lucide-react';
 import { AppSettings } from '../types';
@@ -13,7 +13,7 @@ interface NavbarProps {
   settings: AppSettings;
 }
 
-export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, onLogout, settings }: NavbarProps) {
+function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, onLogout, settings }: NavbarProps) {
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,3 +85,5 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
     </nav>
   );
 }
+
+export default memo(Navbar);
