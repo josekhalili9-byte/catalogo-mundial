@@ -1,7 +1,6 @@
-import React, { memo } from 'react';
+import React from 'react';
 import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES } from '../data';
 import { Lock, LogOut, Shirt } from 'lucide-react';
-import { AppSettings } from '../types';
 
 interface NavbarProps {
   filterTeam: string;
@@ -10,10 +9,9 @@ interface NavbarProps {
   setIsAdmin: (isAdmin: boolean) => void;
   onAdminClick: () => void;
   onLogout?: () => void;
-  settings: AppSettings;
 }
 
-function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, onLogout, settings }: NavbarProps) {
+export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, onLogout }: NavbarProps) {
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,17 +29,10 @@ function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, 
                   onChange={(e) => setFilterTeam(e.target.value)}
                   className="appearance-none bg-gray-100 border-none text-gray-700 py-2 pl-4 pr-8 rounded-full focus:outline-none focus:ring-2 focus:ring-black font-medium"
                 >
-                  {settings.showSelecciones && <option value="Selecciones">Todas las Selecciones</option>}
-                  {settings.showClubes && <option value="Clubes">Todos los Clubes</option>}
+                  <option value="Selecciones">Todas las Selecciones</option>
+                  <option value="Clubes">Todos los Clubes</option>
                   {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => {
                     const isClub = CLUB_CATEGORIES.includes(category);
-                    const isSeleccion = category === 'Selecciones';
-                    const isEspecial = category === 'Ediciones Especiales';
-                    
-                    if (isSeleccion && !settings.showSelecciones) return null;
-                    if (isClub && !settings.showClubes) return null;
-                    if (isEspecial && !settings.showEdicionesEspeciales) return null;
-
                     return (
                       <optgroup key={category} label={isClub ? `Clubes - ${category}` : category}>
                         <option value={category}>Ver todo {category}</option>
@@ -85,5 +76,3 @@ function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin, onAdminClick, 
     </nav>
   );
 }
-
-export default memo(Navbar);

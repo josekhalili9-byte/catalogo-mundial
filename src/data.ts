@@ -33,7 +33,6 @@ export const CLUB_CATEGORIES = [
   "Premier League", "La Liga", "Serie A", "Bundesliga", "Ligue 1"
 ];
 
-export const ORDERED_TEAMS = Object.values(TEAMS_BY_CATEGORY).flat();
-export const TEAMS = [...ORDERED_TEAMS].sort();
+export const TEAMS = Object.values(TEAMS_BY_CATEGORY).flat().sort();
 
 export const JERSEY_TYPES = ['Local', 'Visitante', 'Alternativa', 'Sorpresa', 'Edición Especial'];
