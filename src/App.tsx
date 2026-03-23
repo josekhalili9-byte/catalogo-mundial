@@ -10,10 +10,7 @@ import { Jersey, Order } from './types';
 
 export default function App() {
   const [jerseys, setJerseys] = useState<Jersey[]>([]);
-  const [orders, setOrders] = useState<Order[]>(() => {
-    const saved = localStorage.getItem('orders');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [orders, setOrders] = useState<Order[]>([]);
   const [isAdmin, setIsAdmin] = useState(() => {
     return sessionStorage.getItem('isAdmin') === 'true';
   });
@@ -23,8 +20,22 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('orders', JSON.stringify(orders));
-  }, [orders]);
+    const unsubscribeOrders = onSnapshot(collection(db, 'orders'), (snapshot) => {
+      const ordersData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Order[];
+      // Sort by createdAt descending
+      ordersData.sort((a, b) => b.createdAt - a.createdAt);
+      setOrders(ordersData);
+    }, (error) => {
+      console.error("Error fetching orders:", error);
+    });
+
+    return () => {
+      unsubscribeOrders();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribeDb = onSnapshot(collection(db, 'jerseys'), (snapshot) => {
@@ -73,17 +84,34 @@ export default function App() {
     }
   };
 
-  const handleAddOrder = (order: Order) => {
-    setOrders([...orders, order]);
-    alert("Pedido realizado correctamente");
+  const handleAddOrder = async (order: Order) => {
+    try {
+      const { id, ...orderData } = order;
+      await addDoc(collection(db, 'orders'), orderData);
+      alert("Pedido realizado correctamente");
+    } catch (error) {
+      console.error("Error adding order:", error);
+      alert("Error al realizar el pedido");
+    }
   };
 
-  const handleUpdateOrder = (updatedOrder: Order) => {
-    setOrders(orders.map(o => o.id === updatedOrder.id ? updatedOrder : o));
+  const handleUpdateOrder = async (updatedOrder: Order) => {
+    try {
+      const { id, ...orderData } = updatedOrder;
+      await updateDoc(doc(db, 'orders', id), orderData);
+    } catch (error) {
+      console.error("Error updating order:", error);
+      alert("Error al actualizar el pedido");
+    }
   };
 
-  const handleDeleteOrder = (id: string) => {
-    setOrders(orders.filter(o => o.id !== id));
+  const handleDeleteOrder = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'orders', id));
+    } catch (error) {
+      console.error("Error deleting order:", error);
+      alert("Error al eliminar el pedido");
+    }
   };
 
   const handleLogin = () => {

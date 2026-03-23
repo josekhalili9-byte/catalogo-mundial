@@ -11,6 +11,20 @@ service cloud.firestore {
     //   - type: string (required, in ['Local', 'Visitante', 'Alternativa'])
     //   - price: number (required, > 0)
     //   - imageUrl: string (required, valid URL)
+    //
+    // Collection: orders
+    // Document ID: auto-generated
+    // Fields:
+    //   - jerseyId: string
+    //   - team: string
+    //   - type: string
+    //   - price: number
+    //   - customerName: string
+    //   - department: string
+    //   - number: string
+    //   - playerName: string
+    //   - status: string ('Pendiente' | 'Entregado')
+    //   - createdAt: number
     // ===============================================================
 
     function isValidUrl(url) {
@@ -25,12 +39,33 @@ service cloud.firestore {
              isValidUrl(data.imageUrl);
     }
 
+    function isValidOrder(data) {
+      return data.keys().hasAll(['jerseyId', 'team', 'type', 'price', 'customerName', 'department', 'status', 'createdAt']) &&
+             data.jerseyId is string && data.jerseyId.size() < 100 &&
+             data.team is string && data.team.size() < 100 &&
+             data.type is string && data.type.size() < 50 &&
+             data.price is number && data.price >= 0 &&
+             data.customerName is string && data.customerName.size() > 0 && data.customerName.size() < 100 &&
+             data.department is string && data.department.size() > 0 && data.department.size() < 100 &&
+             (!('number' in data) || (data.number is string && data.number.size() <= 10)) &&
+             (!('playerName' in data) || (data.playerName is string && data.playerName.size() <= 100)) &&
+             data.status in ['Pendiente', 'Entregado'] &&
+             data.createdAt is number;
+    }
+
     match /jerseys/{jerseyId} {
       // Public read for the catalog
       allow read: if true;
       // Allow write since we are using a local password in the UI
       allow create: if isValidJersey(request.resource.data);
       allow update: if isValidJersey(request.resource.data);
+      allow delete: if true;
+    }
+
+    match /orders/{orderId} {
+      allow read: if true;
+      allow create: if isValidOrder(request.resource.data);
+      allow update: if isValidOrder(request.resource.data);
       allow delete: if true;
     }
   }
