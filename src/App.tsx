@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import Navbar from './components/Navbar';
 import Catalog from './components/Catalog';
 import AdminPanel from './components/AdminPanel';
 import AdminLoginModal from './components/AdminLoginModal';
 import CustomizeModal from './components/CustomizeModal';
-import { Jersey, Order } from './types';
+import { Jersey, Order, AppSettings } from './types';
+import { ORDERED_TEAMS } from './data';
 
 export default function App() {
   const [jerseys, setJerseys] = useState<Jersey[]>([]);
@@ -18,6 +19,32 @@ export default function App() {
   const [filterTeam, setFilterTeam] = useState<string>('Selecciones');
   const [customizingJersey, setCustomizingJersey] = useState<Jersey | null>(null);
   const [loading, setLoading] = useState(true);
+  const [settings, setSettings] = useState<AppSettings>({
+    showSelecciones: true,
+    showClubes: true,
+    showEdicionesEspeciales: true
+  });
+
+  useEffect(() => {
+    const unsubscribeSettings = onSnapshot(doc(db, 'settings', 'display'), (doc) => {
+      if (doc.exists()) {
+        setSettings(doc.data() as AppSettings);
+      } else {
+        // Initialize settings if they don't exist
+        setDoc(doc.ref, {
+          showSelecciones: true,
+          showClubes: true,
+          showEdicionesEspeciales: true
+        });
+      }
+    }, (error) => {
+      console.error("Error fetching settings:", error);
+    });
+
+    return () => {
+      unsubscribeSettings();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribeOrders = onSnapshot(collection(db, 'orders'), (snapshot) => {
@@ -43,6 +70,17 @@ export default function App() {
         id: doc.id,
         ...doc.data()
       })) as Jersey[];
+      
+      // Sort jerseys using the predefined order
+      jerseysData.sort((a, b) => {
+        const indexA = ORDERED_TEAMS.indexOf(a.team);
+        const indexB = ORDERED_TEAMS.indexOf(b.team);
+        if (indexA === -1 && indexB === -1) return a.team.localeCompare(b.team);
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      });
+      
       setJerseys(jerseysData);
       setLoading(false);
     }, (error) => {
@@ -125,6 +163,16 @@ export default function App() {
     setIsAdmin(false);
   };
 
+  const handleUpdateSettings = async (newSettings: AppSettings) => {
+    try {
+      await setDoc(doc(db, 'settings', 'display'), newSettings);
+      setSettings(newSettings);
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      alert("Error al actualizar la configuración");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <Navbar 
@@ -134,6 +182,7 @@ export default function App() {
         setIsAdmin={setIsAdmin}
         onAdminClick={() => setShowAdminLogin(true)}
         onLogout={handleLogout}
+        settings={settings}
       />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -150,6 +199,8 @@ export default function App() {
             orders={orders}
             onUpdateOrder={handleUpdateOrder}
             onDeleteOrder={handleDeleteOrder}
+            settings={settings}
+            onUpdateSettings={handleUpdateSettings}
           />
         ) : (
           <Catalog 
@@ -157,6 +208,7 @@ export default function App() {
             filterTeam={filterTeam} 
             setFilterTeam={setFilterTeam}
             onCustomize={(jersey) => setCustomizingJersey(jersey)}
+            settings={settings}
           />
         )}
       </main>

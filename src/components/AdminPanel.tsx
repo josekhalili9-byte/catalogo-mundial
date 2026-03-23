@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { Jersey, Order } from '../types';
+import { Jersey, Order, AppSettings } from '../types';
 import { TEAMS, JERSEY_TYPES } from '../data';
-import { Plus, Edit2, Trash2, Save, X, Image as ImageIcon, AlertCircle, Package, CheckCircle, Clock } from 'lucide-react';
+import { Plus, Edit2, Trash2, Save, X, Image as ImageIcon, AlertCircle, Package, CheckCircle, Clock, Settings } from 'lucide-react';
 
 interface AdminPanelProps {
   jerseys: Jersey[];
@@ -11,10 +11,12 @@ interface AdminPanelProps {
   orders: Order[];
   onUpdateOrder: (order: Order) => void;
   onDeleteOrder: (id: string) => void;
+  settings: AppSettings;
+  onUpdateSettings: (settings: AppSettings) => void;
 }
 
-export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, onUpdateOrder, onDeleteOrder }: AdminPanelProps) {
-  const [activeTab, setActiveTab] = useState<'catalog' | 'orders'>('catalog');
+export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, onUpdateOrder, onDeleteOrder, settings, onUpdateSettings }: AdminPanelProps) {
+  const [activeTab, setActiveTab] = useState<'catalog' | 'orders' | 'settings'>('catalog');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<Partial<Jersey>>({
     team: TEAMS[0],
@@ -156,6 +158,17 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
               {orders.filter(o => o.status === 'Pendiente').length}
             </span>
           )}
+        </button>
+        <button
+          onClick={() => setActiveTab('settings')}
+          className={`px-6 py-3 rounded-xl font-bold text-sm transition-colors flex items-center ${
+            activeTab === 'settings' 
+              ? 'bg-black text-white' 
+              : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
+          }`}
+        >
+          <Settings className="h-4 w-4 mr-2" />
+          Configuración
         </button>
       </div>
 
@@ -370,7 +383,7 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
             )}
           </div>
         </div>
-      ) : (
+      ) : activeTab === 'orders' ? (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-extrabold text-gray-900">Pedidos ({orders.length})</h3>
@@ -469,6 +482,69 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
               </div>
             </div>
           )}
+        </div>
+      ) : (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-2xl font-extrabold text-gray-900">Configuración de la Tienda</h3>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden p-8">
+            <h4 className="text-lg font-bold text-gray-900 mb-6">Visibilidad de Categorías</h4>
+            <p className="text-sm text-gray-500 mb-8">
+              Oculta o muestra los botones de categorías en el catálogo principal. Útil cuando estás agregando inventario y no quieres que los clientes vean categorías vacías.
+            </p>
+
+            <div className="space-y-6">
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <p className="font-bold text-gray-900">Selecciones</p>
+                  <p className="text-sm text-gray-500">Mostrar botón de Selecciones Nacionales</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer"
+                    checked={settings.showSelecciones}
+                    onChange={(e) => onUpdateSettings({ ...settings, showSelecciones: e.target.checked })}
+                  />
+                  <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-black/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <p className="font-bold text-gray-900">Clubes</p>
+                  <p className="text-sm text-gray-500">Mostrar botón de Equipos de Clubes</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer"
+                    checked={settings.showClubes}
+                    onChange={(e) => onUpdateSettings({ ...settings, showClubes: e.target.checked })}
+                  />
+                  <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-black/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black"></div>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
+                <div>
+                  <p className="font-bold text-gray-900">Ediciones Especiales</p>
+                  <p className="text-sm text-gray-500">Mostrar botón de Ediciones Especiales</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    className="sr-only peer"
+                    checked={settings.showEdicionesEspeciales}
+                    onChange={(e) => onUpdateSettings({ ...settings, showEdicionesEspeciales: e.target.checked })}
+                  />
+                  <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-black/10 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-black"></div>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

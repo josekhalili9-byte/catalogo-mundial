@@ -25,3 +25,9 @@ export interface Order {
   status: 'Pendiente' | 'Entregado';
   createdAt: number;
 }
+
+export interface AppSettings {
+  showSelecciones: boolean;
+  showClubes: boolean;
+  showEdicionesEspeciales: boolean;
+}

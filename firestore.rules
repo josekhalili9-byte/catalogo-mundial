@@ -74,5 +74,10 @@ service cloud.firestore {
       allow update: if isValidOrder(request.resource.data);
       allow delete: if true;
     }
+
+    match /settings/{document=**} {
+      allow read: if true;
+      allow write: if true;
+    }
   }
 }

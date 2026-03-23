@@ -1,8 +1,8 @@
 import React from 'react';
-import { Jersey } from '../types';
+import { Jersey, AppSettings } from '../types';
 import JerseyCard from './JerseyCard';
 import { Shirt, Sparkles, Package } from 'lucide-react';
-import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES } from '../data';
+import { TEAMS_BY_CATEGORY, CLUB_CATEGORIES, ORDERED_TEAMS } from '../data';
 
 const mysteryBoxJersey: Jersey = {
   id: 'mystery-box',
@@ -18,9 +18,10 @@ interface CatalogProps {
   filterTeam: string;
   setFilterTeam: (team: string) => void;
   onCustomize: (jersey: Jersey) => void;
+  settings: AppSettings;
 }
 
-export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomize }: CatalogProps) {
+export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomize, settings }: CatalogProps) {
   const isCategory = Object.keys(TEAMS_BY_CATEGORY).includes(filterTeam);
   const isClubes = filterTeam === 'Clubes';
   
@@ -31,7 +32,17 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
       : isCategory
         ? jerseys.filter(j => TEAMS_BY_CATEGORY[filterTeam].includes(j.team))
         : jerseys.filter(j => j.team === filterTeam)
-  ).sort((a, b) => a.team.localeCompare(b.team));
+  ).sort((a, b) => {
+    const indexA = ORDERED_TEAMS.indexOf(a.team);
+    const indexB = ORDERED_TEAMS.indexOf(b.team);
+    
+    // Si no se encuentra en ORDERED_TEAMS, poner al final
+    if (indexA === -1 && indexB === -1) return a.team.localeCompare(b.team);
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    
+    return indexA - indexB;
+  });
 
   return (
     <div className="py-8">
@@ -48,10 +59,10 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
 
         <div className="flex flex-wrap justify-center gap-3">
           {[
-            { id: 'Selecciones', label: 'Selecciones' },
-            { id: 'Clubes', label: 'Clubes' },
-            { id: 'Ediciones Especiales', label: 'Ediciones Especiales' }
-          ].map((category) => (
+            { id: 'Selecciones', label: 'Selecciones', show: settings.showSelecciones },
+            { id: 'Clubes', label: 'Clubes', show: settings.showClubes },
+            { id: 'Ediciones Especiales', label: 'Ediciones Especiales', show: settings.showEdicionesEspeciales }
+          ].filter(category => category.show).map((category) => (
             <button
               key={category.id}
               onClick={() => setFilterTeam(category.id)}
