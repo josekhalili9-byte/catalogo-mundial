@@ -30,13 +30,12 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
                   className="appearance-none bg-gray-100 border-none text-gray-700 py-2 pl-4 pr-8 rounded-full focus:outline-none focus:ring-2 focus:ring-black font-medium"
                 >
                   <option value="Selecciones">Todas las Selecciones</option>
-                  <option value="Clubes">Todos los Clubes (Próximamente)</option>
+                  <option value="Clubes">Todos los Clubes</option>
                   {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => {
                     const isClub = CLUB_CATEGORIES.includes(category);
-                    const isEspecial = category === 'Ediciones Especiales';
                     return (
-                      <optgroup key={category} label={isClub ? `Clubes - ${category}` : (isEspecial ? `${category} (Próximamente)` : category)}>
-                        <option value={category}>Ver todo {category} {isClub || isEspecial ? '(Próximamente)' : ''}</option>
+                      <optgroup key={category} label={isClub ? `Clubes - ${category}` : category}>
+                        <option value={category}>Ver todo {category}</option>
                         {teams.map(team => (
                           <option key={team} value={team}>{team}</option>
                         ))}
