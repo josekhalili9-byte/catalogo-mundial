@@ -28,8 +28,16 @@ export default function Catalog({ jerseys, filterTeam, onCustomize }: CatalogPro
       {filteredJerseys.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-gray-400">
           <Shirt className="h-24 w-24 mb-4 opacity-20" />
-          <p className="text-xl font-medium text-gray-500">No hay playeras disponibles.</p>
-          <p className="text-sm mt-2">Intenta con otra selección o vuelve más tarde.</p>
+          <p className="text-xl font-medium text-gray-500">
+            {filterTeam.includes('Próximamente') 
+              ? 'Esta selección estará disponible próximamente.' 
+              : 'No hay playeras disponibles.'}
+          </p>
+          <p className="text-sm mt-2">
+            {filterTeam.includes('Próximamente') 
+              ? '¡Mantente atento a nuestras actualizaciones!' 
+              : 'Intenta con otra selección o vuelve más tarde.'}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
