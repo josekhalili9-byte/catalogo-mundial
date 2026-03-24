@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
 import Navbar from './components/Navbar';
@@ -6,7 +6,7 @@ import Catalog from './components/Catalog';
 import AdminPanel from './components/AdminPanel';
 import AdminLoginModal from './components/AdminLoginModal';
 import CustomizeModal from './components/CustomizeModal';
-import { Jersey, Order } from './types';
+import { Jersey, Order, AppSettings } from './types';
 
 export default function App() {
   const [jerseys, setJerseys] = useState<Jersey[]>([]);
@@ -17,6 +17,12 @@ export default function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [filterTeam, setFilterTeam] = useState<string>('Selecciones');
   const [customizingJersey, setCustomizingJersey] = useState<Jersey | null>(null);
+  const [settings, setSettings] = useState<AppSettings>({
+    showSelecciones: true,
+    showClubes: true,
+    showEdicionesEspeciales: true
+  });
+  const seededRef = useRef(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,6 +51,56 @@ export default function App() {
       })) as Jersey[];
       setJerseys(jerseysData);
       setLoading(false);
+
+      // Seed initial data if empty and not already seeded in this session
+      if (jerseysData.length === 0 && !seededRef.current) {
+        seededRef.current = true;
+        const initialJerseys = [
+          {
+            team: 'México',
+            type: 'Local',
+            price: 1599,
+            imageUrl: 'https://images.unsplash.com/photo-1518005020250-685948843dd9?q=80&w=800&auto=format&fit=crop',
+            description: 'Jersey oficial de la Selección Mexicana - Local 2024'
+          },
+          {
+            team: 'Argentina',
+            type: 'Local',
+            price: 1699,
+            imageUrl: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=800&auto=format&fit=crop',
+            description: 'Jersey oficial de la Selección Argentina - Campeón del Mundo'
+          },
+          {
+            team: 'Brasil',
+            type: 'Local',
+            price: 1599,
+            imageUrl: 'https://images.unsplash.com/photo-1518005020250-685948843dd9?q=80&w=800&auto=format&fit=crop',
+            description: 'Jersey oficial de la Selección Brasileña - Pentacampeón'
+          },
+          {
+            team: 'España',
+            type: 'Local',
+            price: 1599,
+            imageUrl: 'https://images.unsplash.com/photo-1518005020250-685948843dd9?q=80&w=800&auto=format&fit=crop',
+            description: 'Jersey oficial de la Selección Española - La Roja'
+          },
+          {
+            team: 'Francia',
+            type: 'Local',
+            price: 1599,
+            imageUrl: 'https://images.unsplash.com/photo-1518005020250-685948843dd9?q=80&w=800&auto=format&fit=crop',
+            description: 'Jersey oficial de la Selección Francesa - Les Bleus'
+          }
+        ];
+
+        initialJerseys.forEach(async (j) => {
+          try {
+            await addDoc(collection(db, 'jerseys'), j);
+          } catch (e) {
+            console.error("Error seeding jersey:", e);
+          }
+        });
+      }
     }, (error) => {
       console.error("Error fetching jerseys:", error);
       setLoading(false);
@@ -125,6 +181,10 @@ export default function App() {
     setIsAdmin(false);
   };
 
+  const handleUpdateSettings = (newSettings: AppSettings) => {
+    setSettings(newSettings);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 font-sans">
       <Navbar 
@@ -134,6 +194,7 @@ export default function App() {
         setIsAdmin={setIsAdmin}
         onAdminClick={() => setShowAdminLogin(true)}
         onLogout={handleLogout}
+        settings={settings}
       />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -150,6 +211,8 @@ export default function App() {
             orders={orders}
             onUpdateOrder={handleUpdateOrder}
             onDeleteOrder={handleDeleteOrder}
+            settings={settings}
+            onUpdateSettings={handleUpdateSettings}
           />
         ) : (
           <Catalog 
@@ -157,6 +220,7 @@ export default function App() {
             filterTeam={filterTeam} 
             setFilterTeam={setFilterTeam}
             onCustomize={(jersey) => setCustomizingJersey(jersey)}
+            settings={settings}
           />
         )}
       </main>

@@ -1,78 +1,11 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // ===============================================================
-    // Assumed Data Model
-    // ===============================================================
-    // Collection: jerseys
-    // Document ID: auto-generated
-    // Fields:
-    //   - team: string (required, < 100 chars)
-    //   - type: string (required, in ['Local', 'Visitante', 'Alternativa'])
-    //   - price: number (required, > 0)
-    //   - imageUrl: string (required, valid URL)
-    //
-    // Collection: orders
-    // Document ID: auto-generated
-    // Fields:
-    //   - jerseyId: string
-    //   - team: string
-    //   - type: string
-    //   - price: number
-    //   - customerName: string
-    //   - phone: string
-    //   - department: string (optional)
-    //   - gender: string ('Hombre' | 'Mujer' | 'Niño')
-    //   - size: string
-    //   - number: string
-    //   - playerName: string
-    //   - status: string ('Pendiente' | 'Entregado')
-    //   - createdAt: number
-    // ===============================================================
-
-    function isValidUrl(url) {
-      return url is string && (url.matches("^https://.*") || url.matches("^http://.*") || url.matches("^data:image/.*")) && url.size() < 1000000;
-    }
-
-    function isValidJersey(data) {
-      return data.keys().hasOnly(['team', 'type', 'price', 'imageUrl']) &&
-             data.team is string && data.team.size() > 0 && data.team.size() < 100 &&
-             data.type in ['Local', 'Visitante', 'Alternativa'] &&
-             data.price is number && data.price >= 0 &&
-             isValidUrl(data.imageUrl);
-    }
-
-    function isValidOrder(data) {
-      return data.keys().hasAll(['jerseyId', 'team', 'type', 'price', 'customerName', 'phone', 'gender', 'size', 'status', 'createdAt']) &&
-             data.jerseyId is string && data.jerseyId.size() < 100 &&
-             data.team is string && data.team.size() < 100 &&
-             data.type is string && data.type.size() < 50 &&
-             data.price is number && data.price >= 0 &&
-             data.customerName is string && data.customerName.size() > 0 && data.customerName.size() < 100 &&
-             data.phone is string && data.phone.size() >= 8 && data.phone.size() <= 20 &&
-             (!('department' in data) || (data.department is string && data.department.size() <= 100)) &&
-             data.gender is string && data.gender in ['Hombre', 'Mujer', 'Niño'] &&
-             data.size is string && data.size in ['Niño S', 'Niño M', 'Niño L', 'Niño XL', 'Adulto S', 'Adulto M', 'Adulto L', 'Adulto XL'] &&
-             (!('number' in data) || (data.number is string && data.number.size() <= 10)) &&
-             (!('playerName' in data) || (data.playerName is string && data.playerName.size() <= 100)) &&
-             data.status in ['Pendiente', 'Entregado'] &&
-             data.createdAt is number;
-    }
-
-    match /jerseys/{jerseyId} {
-      // Public read for the catalog
-      allow read: if true;
-      // Allow write since we are using a local password in the UI
-      allow create: if isValidJersey(request.resource.data);
-      allow update: if isValidJersey(request.resource.data);
-      allow delete: if true;
-    }
-
-    match /orders/{orderId} {
-      allow read: if true;
-      allow create: if isValidOrder(request.resource.data);
-      allow update: if isValidOrder(request.resource.data);
-      allow delete: if true;
+    // Allow public read and write access to all collections.
+    // This is required because the application uses a client-side password
+    // instead of Firebase Authentication for the admin panel.
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
