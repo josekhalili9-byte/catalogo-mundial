@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import Navbar from './components/Navbar';
 import Catalog from './components/Catalog';
@@ -24,6 +24,27 @@ export default function App() {
   });
   const seededRef = useRef(false);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribeSettings = onSnapshot(doc(db, 'settings', 'global'), (docSnap) => {
+      if (docSnap.exists()) {
+        setSettings(docSnap.data() as AppSettings);
+      } else {
+        // Initialize if it doesn't exist
+        setDoc(doc(db, 'settings', 'global'), {
+          showSelecciones: true,
+          showClubes: true,
+          showEdicionesEspeciales: true
+        });
+      }
+    }, (error) => {
+      console.error("Error fetching settings:", error);
+    });
+
+    return () => {
+      unsubscribeSettings();
+    };
+  }, []);
 
   useEffect(() => {
     const unsubscribeOrders = onSnapshot(collection(db, 'orders'), (snapshot) => {
@@ -181,8 +202,13 @@ export default function App() {
     setIsAdmin(false);
   };
 
-  const handleUpdateSettings = (newSettings: AppSettings) => {
-    setSettings(newSettings);
+  const handleUpdateSettings = async (newSettings: AppSettings) => {
+    try {
+      await setDoc(doc(db, 'settings', 'global'), newSettings);
+    } catch (error) {
+      console.error("Error updating settings:", error);
+      alert("Error al actualizar la configuración");
+    }
   };
 
   return (
