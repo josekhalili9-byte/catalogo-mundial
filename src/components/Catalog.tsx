@@ -49,9 +49,6 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
   return (
     <div className="py-8">
       <div className="mb-10 text-center">
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg max-w-2xl mx-auto mb-6 text-sm font-medium">
-          Por el momento solo tenemos playeras de selecciones, pero estamos trabajando en las demás.
-        </div>
         <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl mb-4">
           Colección Exclusiva
         </h1>
