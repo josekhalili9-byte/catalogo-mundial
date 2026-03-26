@@ -36,7 +36,16 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
                   {settings.showClubes && <option value="Clubes">Todos los Clubes</option>}
                   {Object.entries(TEAMS_BY_CATEGORY).map(([category, teams]) => {
                     const isClub = CLUB_CATEGORIES.includes(category);
-                    const showCategory = isClub ? settings.showClubes : settings.showSelecciones;
+                    let showCategory = true;
+                    if (isClub) {
+                      showCategory = settings.showClubes;
+                    } else if (category === 'Selecciones') {
+                      showCategory = settings.showSelecciones;
+                    } else if (category === 'Ediciones Especiales') {
+                      showCategory = settings.showEdicionesEspeciales;
+                    } else if (category === 'Niños') {
+                      showCategory = settings.showNinos;
+                    }
                     
                     if (!showCategory) return null;
 

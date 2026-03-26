@@ -20,7 +20,8 @@ export default function App() {
   const [settings, setSettings] = useState<AppSettings>({
     showSelecciones: true,
     showClubes: true,
-    showEdicionesEspeciales: true
+    showEdicionesEspeciales: true,
+    showNinos: true
   });
   const seededRef = useRef(false);
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,8 @@ export default function App() {
         setDoc(doc(db, 'settings', 'global'), {
           showSelecciones: true,
           showClubes: true,
-          showEdicionesEspeciales: true
+          showEdicionesEspeciales: true,
+          showNinos: true
         });
       }
     }, (error) => {

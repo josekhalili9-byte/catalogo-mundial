@@ -28,4 +28,5 @@ export interface AppSettings {
   showSelecciones: boolean;
   showClubes: boolean;
   showEdicionesEspeciales: boolean;
+  showNinos: boolean;
 }
