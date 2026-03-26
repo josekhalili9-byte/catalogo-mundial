@@ -60,7 +60,7 @@ export default function Catalog({ jerseys, filterTeam, setFilterTeam, onCustomiz
           {[
             { id: 'Selecciones', label: 'Selecciones', show: settings.showSelecciones },
             { id: 'Clubes', label: 'Clubes', show: settings.showClubes },
-            { id: 'Niños', label: 'Niños', show: settings.showNinos },
+            { id: 'Bebé', label: 'Bebé', show: settings.showNinos },
             { id: 'Ediciones Especiales', label: 'Ediciones Especiales', show: settings.showEdicionesEspeciales }
           ].filter(category => category.show).map((category) => (
             <button

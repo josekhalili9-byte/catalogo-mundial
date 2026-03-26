@@ -24,7 +24,7 @@ export const TEAMS_BY_CATEGORY: Record<string, string[]> = {
   "Ediciones Especiales": [
     "Retro", "Concept Kit", "Edición Conmemorativa", "Colaboración Especial", "Versión Jugador", "Firmadas"
   ],
-  "Niños": [
+  "Bebé": [
     "Kits Infantiles", "Pañaleros", "Conjuntos Bebé", "Playeras Niños", "Uniformes Infantiles"
   ],
   "Otros": [

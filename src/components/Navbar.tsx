@@ -43,7 +43,7 @@ export default function Navbar({ filterTeam, setFilterTeam, isAdmin, setIsAdmin,
                       showCategory = settings.showSelecciones;
                     } else if (category === 'Ediciones Especiales') {
                       showCategory = settings.showEdicionesEspeciales;
-                    } else if (category === 'Niños') {
+                    } else if (category === 'Bebé') {
                       showCategory = settings.showNinos;
                     }
                     

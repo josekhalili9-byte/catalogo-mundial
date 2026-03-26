@@ -542,8 +542,8 @@ export default function AdminPanel({ jerseys, onAdd, onEdit, onDelete, orders, o
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100">
                 <div>
-                  <p className="font-bold text-gray-900">Niños</p>
-                  <p className="text-sm text-gray-500">Mostrar botón de Playeras para Niños</p>
+                  <p className="font-bold text-gray-900">Bebé</p>
+                  <p className="text-sm text-gray-500">Mostrar botón de Playeras para Bebé</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input 
